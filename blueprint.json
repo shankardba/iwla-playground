@@ -1,0 +1,73 @@
+{
+ "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+ "landingPage": "/",
+ "preferredVersions": {
+  "php": "8.3",
+  "wp": "latest"
+ },
+ "siteOptions": {
+  "blogname": "IWLA Arlington-Fairfax (test)"
+ },
+ "steps": [
+  {
+   "step": "setSiteOptions",
+   "options": {
+    "permalink_structure": "/%postname%/"
+   }
+  },
+  {
+   "step": "installTheme",
+   "themeData": {
+    "resource": "url",
+    "url": "https://raw.githubusercontent.com/shankardba/iwla-playground/main/iwla-modern.zip"
+   },
+   "options": {
+    "activate": true
+   }
+  },
+  {
+   "step": "mkdir",
+   "path": "/wordpress/wp-content/iwla-media"
+  },
+  {
+   "step": "writeFile",
+   "path": "/wordpress/wp-content/iwla-media/rifle-pistol.jpg",
+   "data": {
+    "resource": "url",
+    "url": "https://raw.githubusercontent.com/shankardba/iwla-playground/main/media/rifle-pistol.jpg"
+   }
+  },
+  {
+   "step": "writeFile",
+   "path": "/wordpress/wp-content/iwla-media/skeet-trap.jpg",
+   "data": {
+    "resource": "url",
+    "url": "https://raw.githubusercontent.com/shankardba/iwla-playground/main/media/skeet-trap.jpg"
+   }
+  },
+  {
+   "step": "writeFile",
+   "path": "/wordpress/wp-content/iwla-media/archery.jpg",
+   "data": {
+    "resource": "url",
+    "url": "https://raw.githubusercontent.com/shankardba/iwla-playground/main/media/archery.jpg"
+   }
+  },
+  {
+   "step": "writeFile",
+   "path": "/wordpress/wp-content/iwla-media/conservation.jpg",
+   "data": {
+    "resource": "url",
+    "url": "https://raw.githubusercontent.com/shankardba/iwla-playground/main/media/conservation.jpg"
+   }
+  },
+  {
+   "step": "runPHP",
+   "code": "<?php\nrequire '/wordpress/wp-load.php';\nob_start();\nrequire get_theme_root() . '/iwla-modern/seed-content.php';\nob_end_clean();\nrequire_once ABSPATH . 'wp-admin/includes/image.php';\n$map = array('rifle-pistol'=>'rifle-pistol.jpg','skeet-trap'=>'skeet-trap.jpg','archery'=>'archery.jpg','conservation'=>'conservation.jpg');\n$up = wp_upload_dir();\nforeach ( $map as $slug => $file ) {\n  $pages = get_posts( array( 'post_type' => 'page', 'name' => $slug, 'numberposts' => 1 ) );\n  if ( ! $pages ) { continue; }\n  $dest = $up['path'] . '/' . $file;\n  copy( '/wordpress/wp-content/iwla-media/' . $file, $dest );\n  $id = wp_insert_attachment( array( 'post_mime_type' => 'image/jpeg', 'post_title' => $slug . ' banner', 'post_status' => 'inherit' ), $dest, $pages[0]->ID );\n  wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $dest ) );\n  set_post_thumbnail( $pages[0]->ID, $id );\n}\nflush_rewrite_rules();\n"
+  },
+  {
+   "step": "login",
+   "username": "admin"
+  }
+ ]
+}
