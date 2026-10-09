@@ -23,6 +23,12 @@ ob_end_clean();
 require_once ABSPATH . 'wp-admin/includes/image.php';
 $map = %s;
 $up = wp_upload_dir();
+$alts = array(
+  'rifle-pistol' => 'Drone photo looking down the covered firing line at the Rifle & Pistol range, with the berm and target area beyond',
+  'skeet-trap' => 'Drone photo looking down on the fan-shaped skeet and trap shooting stations, with the shot-fall field and tree line beyond',
+  'archery' => 'A row of archery targets across a grass field, with the field archery gazebo on the right, framed by trees',
+  'conservation' => 'A wooden bench overlooking the chapter pond on a clear winter day',
+);
 foreach ( $map as $slug => $file ) {
   $pages = get_posts( array( 'post_type' => 'page', 'name' => $slug, 'numberposts' => 1 ) );
   if ( ! $pages ) { continue; }
@@ -30,6 +36,7 @@ foreach ( $map as $slug => $file ) {
   copy( '/wordpress/wp-content/iwla-media/' . $file, $dest );
   $id = wp_insert_attachment( array( 'post_mime_type' => 'image/jpeg', 'post_title' => $slug . ' banner', 'post_status' => 'inherit' ), $dest, $pages[0]->ID );
   wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $dest ) );
+  if ( isset( $alts[ $slug ] ) ) { update_post_meta( $id, '_wp_attachment_image_alt', $alts[ $slug ] ); }
   set_post_thumbnail( $pages[0]->ID, $id );
 }
 flush_rewrite_rules();
