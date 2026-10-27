@@ -1,11 +1,12 @@
 #!/bin/bash
 # Usage: ./build.sh <public-base-url>   e.g. ./build.sh http://localhost:9100
+# Public repo: the zip leaves out CLAUDE.md, tools/ and data/documents.csv (Google Drive file IDs) on purpose.
 set -e
 BASE="${1:?base url required}"
 cd "$(dirname "$0")"
 THEMES=../wordpress/wp-content/themes
 rm -f iwla-modern.zip
-(cd "$THEMES" && zip -qr "$OLDPWD/iwla-modern.zip" iwla-modern -x "*/.git/*" "*/.DS_Store" "*.log")
+(cd "$THEMES" && zip -qr "$OLDPWD/iwla-modern.zip" iwla-modern -x "*/.git/*" "*/.DS_Store" "*.log" "iwla-modern/CLAUDE.md" "iwla-modern/tools/*" "iwla-modern/data/documents.csv")
 python3 - "$BASE" <<'PY'
 import json,sys
 base=sys.argv[1].rstrip('/')
