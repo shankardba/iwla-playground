@@ -10,7 +10,7 @@ rm -f iwla-modern.zip
 python3 - "$BASE" <<'PY'
 import json,sys
 base=sys.argv[1].rstrip('/')
-imgs={"rifle-pistol":"rifle-pistol.jpg","skeet-trap":"skeet-trap.jpg","archery":"archery.jpg","conservation":"conservation.jpg","air-range":"air-range.jpg"}
+imgs={"rifle-pistol":"rifle-pistol.jpg","skeet-trap":"skeet-trap.jpg","target-archery":"archery.jpg","field-archery":"archery.jpg","conservation":"conservation.jpg","air-range":"air-range.jpg"}
 steps=[{"step":"setSiteOptions","options":{"permalink_structure":"/%postname%/"}},
  {"step":"installTheme","themeData":{"resource":"url","url":base+"/iwla-modern.zip"},"options":{"activate":True}}]
 steps.append({"step":"mkdir","path":"/wordpress/wp-content/iwla-media"})
@@ -27,7 +27,8 @@ $up = wp_upload_dir();
 $alts = array(
   'rifle-pistol' => 'Drone photo looking down the covered firing line at the Rifle & Pistol range, with the berm and target area beyond',
   'skeet-trap' => 'Drone photo looking down on the fan-shaped skeet and trap shooting stations, with the shot-fall field and tree line beyond',
-  'archery' => 'A row of archery targets across a grass field, with the field archery gazebo on the right, framed by trees',
+  'target-archery' => 'A row of archery targets across a grass field, with the field archery gazebo on the right, framed by trees',
+  'field-archery' => 'A row of archery targets across a grass field, with the field archery gazebo on the right, framed by trees',
   'conservation' => 'A wooden bench overlooking the chapter pond on a clear winter day',
   'air-range' => 'Panoramic view of the indoor Sills Air Range: a long row of shooting stations facing the target line',
 );
